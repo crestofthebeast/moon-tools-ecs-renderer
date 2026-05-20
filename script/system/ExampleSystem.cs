@@ -1,8 +1,9 @@
 using System;
 using Godot;
+using GodotMoonTools.Components;
 using MoonTools.ECS;
 
-namespace GodotMoonTools.Components;
+namespace GodotMoonTools.Systems;
 
 public class ExampleSystem : MoonTools.ECS.System
 {
@@ -17,12 +18,9 @@ public class ExampleSystem : MoonTools.ECS.System
 
     public override void Update(TimeSpan delta)
     {
-        // foreach (var ent in World.Debug_GetEntities(typeof(ExampleComponent)))
-        //     GD.Print(ent + " out the filter");
         foreach (var example in ExampleFilter.Entities)
         {
             GD.Print(example.ToString() + " in the filter");
         }
-        // GD.Print(World.Count<ExampleComponent>());
     }
 }

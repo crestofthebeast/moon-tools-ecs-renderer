@@ -2,26 +2,25 @@ using Godot;
 using System;
 using MoonTools.ECS;
 using GodotMoonTools.Components;
+using GodotMoonTools.Systems;
+using FixMath.NET;
 public partial class Node2d : Node2D
 {
 	// world
 	World World { get; } = new();
 
 	// systems
-	ExampleSystem ExampleSystem;
+	PlayerMovement PlayerMovement;
 
 	public override void _Ready()
 	{
 		base._Ready();
 
-		ExampleSystem = new(World);
+		PlayerMovement = new(World);
 
-		for (int i = 0; i < 1; i++) 
-		{
-			var e = World.CreateEntity();
-			World.Set(e, new ExampleComponent(3.0f));
-		}
-		
+		var p1 = World.CreateEntity();
+		World.Set(p1, new ControlledByPlayer(0));	
+		World.Set(p1, new Position(new FixVector2(new Fix64(0), new Fix64(0))));	
 	}
 
 
@@ -32,11 +31,7 @@ public partial class Node2d : Node2D
 		// we need a span for delta, so lets do that
 		TimeSpan span = DeltaToTimeSpan(delta);
 
-		ExampleSystem.Update(span);
-		// foreach (var ent in World.Debug_GetEntities(typeof(ExampleComponent)))
-		// {
-		// 	GD.Print(ent);
-		// }
+		PlayerMovement.Update(span);
 
 		World.FinishUpdate();
 	}
