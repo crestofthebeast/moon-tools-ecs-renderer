@@ -51,15 +51,13 @@ public class PooledSprite2DRenderer : MoonTools.ECS.System
 			{
 				SpriteTexture tex = TexturesToRender[i].Item1;
 				FixPosition pos = TexturesToRender[i].Item2;
-				var path = TextureStorage.GetString(tex.ID);
-                // TODO HACK dont. do not. no. put that down. no.
-				sprite2D.Texture = ResourceLoader.Load<Texture2D>(path);
-				sprite2D.Visible = true;
+				string spr = TextureStorage.GetString(tex.ID);
+				sprite2D.Texture = ResourceMap.Textures[spr];
 				sprite2D.Position = new Vector2(pos.IntX, pos.IntY);
 			}
 			else
 			{
-				sprite2D.Visible = false;
+				sprite2D.Texture = null;
 			}
 		}
 	}

@@ -63,7 +63,7 @@ public partial class Node2d : Node2D
 		int yOffset = (int)GD.RandRange(0, 500);
 		World.Set(player, new FixPosition(new FixVector2(new Fix64(xOffset), new Fix64(yOffset))));
 		World.Set(player, new SpriteTexture(
-			TextureStorage.GetID("res://asset/texture_resources/spr_box.tres"),
+			TextureStorage.GetID("player"),
 			1, 1
 		));
 		return player;
