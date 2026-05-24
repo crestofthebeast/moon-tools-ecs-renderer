@@ -11,16 +11,18 @@ public partial class Node2d : Node2D
 
 	// systems
 	PlayerMovement PlayerMovement;
+	 
+	// renderer
+	BodgeRenderer BodgeRenderer;
 
 	public override void _Ready()
 	{
 		base._Ready();
 
 		PlayerMovement = new(World);
+		BodgeRenderer = new(World, this);
 
-		var p1 = World.CreateEntity();
-		World.Set(p1, new ControlledByPlayer(0));	
-		World.Set(p1, new Position(new FixVector2(new Fix64(0), new Fix64(0))));	
+		var p1 = SpawnPlayer(0);
 	}
 
 
@@ -32,6 +34,7 @@ public partial class Node2d : Node2D
 		TimeSpan span = DeltaToTimeSpan(delta);
 
 		PlayerMovement.Update(span);
+		BodgeRenderer.Update(span);
 
 		World.FinishUpdate();
 	}
@@ -43,6 +46,15 @@ public partial class Node2d : Node2D
 		long ticks = (long)(delta * 10000000);
 		TimeSpan span = new(ticks);
 		return span;
+	}
+
+	private Entity SpawnPlayer(int id)
+	{
+		var player = World.CreateEntity();
+		World.Set(player, new ControlledByPlayer(id));
+		World.Set(player, new Position(new FixVector2(new Fix64(0), new Fix64(0))));
+		World.Set(player, new GDSprite(id));
+		return player;
 	}
 
 }
