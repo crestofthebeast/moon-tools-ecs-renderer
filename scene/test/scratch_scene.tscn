@@ -1,10 +1,6 @@
 [gd_scene format=3 uid="uid://dytfm04j6ay5l"]
 
 [ext_resource type="Script" uid="uid://bomg0p8y6xic" path="res://scene/test/Node2d.cs" id="1_i8q0d"]
-[ext_resource type="Texture2D" uid="uid://dlnj3ucy41y28" path="res://asset/texture_resources/spr_box.tres" id="2_q5cg6"]
 
 [node name="Node2D" type="Node2D" unique_id=1115583577]
 script = ExtResource("1_i8q0d")
-
-[node name="Cube" type="Sprite2D" parent="." unique_id=1883729066 groups=["0"]]
-texture = ExtResource("2_q5cg6")

@@ -4,8 +4,12 @@ using MoonTools.ECS;
 using GodotMoonTools.Components;
 using GodotMoonTools.Systems;
 using FixMath.NET;
+using GodotMoonTools.Data;
+using Random = MoonTools.ECS.Random;
 public partial class Node2d : Node2D
 {
+	[Export]
+	CompressedTexture2D playerTexture;
 	// world
 	World World { get; } = new();
 
@@ -13,16 +17,19 @@ public partial class Node2d : Node2D
 	PlayerMovement PlayerMovement;
 	 
 	// renderer
-	BodgeRenderer BodgeRenderer;
+	PooledSprite2DRenderer Renderer;
 
 	public override void _Ready()
 	{
 		base._Ready();
 
 		PlayerMovement = new(World);
-		BodgeRenderer = new(World, this);
+		Renderer = new(World, this);
 
-		var p1 = SpawnPlayer(0);
+		for (int i = 0; i < 1000; i++)
+		{
+			SpawnPlayer(0);
+		}
 	}
 
 
@@ -34,7 +41,7 @@ public partial class Node2d : Node2D
 		TimeSpan span = DeltaToTimeSpan(delta);
 
 		PlayerMovement.Update(span);
-		BodgeRenderer.Update(span);
+		Renderer.Update(span);
 
 		World.FinishUpdate();
 	}
@@ -52,8 +59,13 @@ public partial class Node2d : Node2D
 	{
 		var player = World.CreateEntity();
 		World.Set(player, new ControlledByPlayer(id));
-		World.Set(player, new Position(new FixVector2(new Fix64(0), new Fix64(0))));
-		World.Set(player, new GDSprite(id));
+		int xOffset = (int)GD.RandRange(0, 500);
+		int yOffset = (int)GD.RandRange(0, 500);
+		World.Set(player, new FixPosition(new FixVector2(new Fix64(xOffset), new Fix64(yOffset))));
+		World.Set(player, new SpriteTexture(
+			TextureStorage.GetID("res://asset/texture_resources/spr_box.tres"),
+			1, 1
+		));
 		return player;
 	}
 

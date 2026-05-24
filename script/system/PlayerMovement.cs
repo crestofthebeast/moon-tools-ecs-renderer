@@ -15,7 +15,7 @@ public class PlayerMovement : MoonTools.ECS.System
     {
         PlayerFilter = FilterBuilder
                         .Include<ControlledByPlayer>()
-                        .Include<Position>()
+                        .Include<FixPosition>()
                         .Build();
     }
 
@@ -24,7 +24,7 @@ public class PlayerMovement : MoonTools.ECS.System
         foreach (var player in PlayerFilter.Entities)
         {
             int id = Get<ControlledByPlayer>(player).PlayerNo;
-            var pos = Get<Position>(player).Pos;
+            var pos = Get<FixPosition>(player).Pos;
             int moveU = Input.IsActionPressed($"p{id}_up") ? -1 : 0;
             int moveD = Input.IsActionPressed($"p{id}_down") ? 1 : 0;
             int moveL = Input.IsActionPressed($"p{id}_left") ? -1 : 0;
@@ -33,9 +33,7 @@ public class PlayerMovement : MoonTools.ECS.System
             pos.x += new Fix64((moveL + moveR) * moveSpeed);
             pos.y += new Fix64((moveU + moveD) * moveSpeed);
 
-            Set<Position>(player, new Position(pos));
-
-            GD.Print($"Position: {pos.x}, {pos.y}");
+            Set<FixPosition>(player, new FixPosition(pos));
         }
     }
 }

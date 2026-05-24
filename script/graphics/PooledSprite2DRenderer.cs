@@ -1,37 +1,75 @@
 using System;
+using System.Collections.Generic;
 using FixMath.NET;
 using Godot;
 using GodotMoonTools.Components;
+using GodotMoonTools.Data;
 using MoonTools.ECS;
 
 namespace GodotMoonTools.Systems;
 
 
 // this whole thing is a disgusting bodge
-public class BodgeRenderer : MoonTools.ECS.System
+public class PooledSprite2DRenderer : MoonTools.ECS.System
 {
 
-    private Node2D root;
-    private Filter SpriteFilter { get; }
+	private Node2D root;
+	private Filter SpriteFilter { get; }
+	int PoolSize = 10000;
+	List<Sprite2D> Sprites = new();
 
-    public BodgeRenderer(World world, Node2D _root) : base(world)
-    {
-        root = _root;
-        SpriteFilter = FilterBuilder
-                        .Include<GDSprite>()
-                        .Build();
-    }
+	public PooledSprite2DRenderer(World world, Node2D _root, int PoolSize = 100) : base(world)
+	{
+		root = _root;
+		SpriteFilter = FilterBuilder
+						.Include<SpriteTexture>()
+						.Include<FixPosition>()
+						.Build();
+	}
 
-    public override void Update(TimeSpan delta)
-    {
-        foreach (var example in SpriteFilter.Entities)
-        {
-            int id = World.Get<GDSprite>(example).ID;
-            Fix64 fixX = World.Get<Position>(example).X;
-            Fix64 fixY = World.Get<Position>(example).Y;
-            Sprite2D sprite = (Sprite2D)root.GetTree().GetFirstNodeInGroup(id.ToString());
-            // TODO fixvec2 to vec2 helper would be nice
-            sprite.Position = new Vector2((int)fixX, (int)fixY);
-        }
-    }
+	public override void Update(TimeSpan delta)
+	{
+		// bit cursed to put a while loop here but it makes enough sense
+		while (Sprites.Count < PoolSize)
+		{
+			Sprites.Add(CreateRenderingSprite());
+		}
+
+		List<(SpriteTexture, FixPosition)> TexturesToRender = new();
+
+		foreach (var spr in SpriteFilter.Entities)
+		{
+			TexturesToRender.Add(
+				(World.Get<SpriteTexture>(spr), World.Get<FixPosition>(spr)));
+		}
+
+		for (int i = 0; i < PoolSize; i++)
+		{
+			Sprite2D sprite2D = Sprites[i];
+			// missing a bounds check
+			if (i < TexturesToRender.Count)
+			{
+				SpriteTexture tex = TexturesToRender[i].Item1;
+				FixPosition pos = TexturesToRender[i].Item2;
+				var path = TextureStorage.GetString(tex.ID);
+                // TODO HACK dont. do not. no. put that down. no.
+				sprite2D.Texture = ResourceLoader.Load<Texture2D>(path);
+				sprite2D.Visible = true;
+				sprite2D.Position = new Vector2(pos.IntX, pos.IntY);
+			}
+			else
+			{
+				sprite2D.Visible = false;
+			}
+		}
+	}
+
+	// really wish c# had a convention for pure vs side effecting functions...
+	// like in clojure this would be (create-rendering-sprite!)
+	public Sprite2D CreateRenderingSprite()
+	{
+		var sprite = new Sprite2D();
+		root.AddChild(sprite);
+		return sprite;
+	}
 }
