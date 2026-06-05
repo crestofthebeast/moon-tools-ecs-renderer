@@ -4,10 +4,10 @@ using FixMath.NET;
 public readonly record struct FixPosition
 {
     public readonly FixVector2 Pos;
-    public readonly Fix64 X { get => Pos.x; }
-    public readonly Fix64 Y { get => Pos.y; }
-    public readonly int IntX { get => (int)Pos.x; }
-    public readonly int IntY { get => (int)Pos.y; }
+    public readonly Fix64 X { get => Pos.X; }
+    public readonly Fix64 Y { get => Pos.Y; }
+    public readonly int IntX { get => (int)Pos.X; }
+    public readonly int IntY { get => (int)Pos.Y; }
 
     public FixPosition(FixVector2 pos)
     {

@@ -6,13 +6,13 @@ namespace FixMath.NET
 	[Serializable]
 	public struct FixVector2 
 	{
-		public Fix64 x;
-		public Fix64 y;
+		public Fix64 X;
+		public Fix64 Y;
 
 		public FixVector2(Fix64 x, Fix64 y)
 		{
-			this.x = x;
-			this.y = y;
+			this.X = x;
+			this.Y = y;
 		}
 
 		public static readonly FixVector2 Zero = new FixVector2();
@@ -26,25 +26,25 @@ namespace FixMath.NET
 		
 		public static Fix64 Length(FixVector2 v)
 		{
-			return Fix64.Sqrt(v.x * v.x + v.y * v.y);
+			return Fix64.Sqrt(v.X * v.X + v.Y * v.Y);
 		}
 
 		public static Fix64 Distance(FixVector2 vec0, FixVector2 vec1)
 		{
-			Fix64 dx = vec0.x - vec1.x;
-			Fix64 dy = vec0.y - vec1.y;
+			Fix64 dx = vec0.X - vec1.X;
+			Fix64 dy = vec0.Y - vec1.Y;
 			return Fix64.Sqrt(dx * dx + dy * dy);
 		}
 
 		public static Fix64 LengthSq(FixVector2 v)
 		{
-			return v.x * v.x + v.y * v.y;
+			return v.X * v.X + v.Y * v.Y;
 		}
 
 		public static Fix64 DistanceSq(FixVector2 vec0, FixVector2 vec1)
 		{
-			Fix64 dx = vec0.x - vec1.x;
-			Fix64 dy = vec0.y - vec1.y;
+			Fix64 dx = vec0.X - vec1.X;
+			Fix64 dy = vec0.Y - vec1.Y;
 			return dx * dx + dy * dy;
 		}
 
@@ -52,7 +52,7 @@ namespace FixMath.NET
 		{
 			Fix64 len = Length(v);
 			if (len == Fix64.Zero) return Zero;
-			FixVector2 nor = new FixVector2(v.x / len, v.y / len);
+			FixVector2 nor = new FixVector2(v.X / len, v.Y / len);
 			//if (Fix64.Abs(nor.x) < Fix64.Epsilon) nor.x = Fix64.Zero;
 			//if (Fix64.Abs(nor.y) < Fix64.Epsilon) nor.y = Fix64.Zero;
 			return nor;
@@ -61,26 +61,26 @@ namespace FixMath.NET
 		public static Fix64 Dot(FixVector2 a, FixVector2 b)
 		{
 			// a · b = ax * bx + ay * by
-			return a.x * b.x + a.y * b.y;
+			return a.X * b.X + a.Y * b.Y;
 		}
 
 		public static Fix64 Cross(FixVector2 a, FixVector2 b)
 		{
 			// cz = ax * by − ay * bx
-			return a.x * b.y - a.y * b.x;
+			return a.X * b.Y - a.Y * b.X;
 		}
 
 		public static FixVector2 GetNormal(FixVector2 a, FixVector2 b)
 		{
 			FixVector2 edge = b - a;
-			FixVector2 axis = new FixVector2(-edge.y, edge.x);
+			FixVector2 axis = new FixVector2(-edge.Y, edge.X);
 			return Normalize(axis);
 		}
 
 		public static FixVector2 GetInvertedNormal(FixVector2 a, FixVector2 b)
 		{
 			FixVector2 edge = b - a;
-			FixVector2 axis = new FixVector2(edge.y, -edge.x);
+			FixVector2 axis = new FixVector2(edge.Y, -edge.X);
 			return Normalize(axis);
 		}
 
@@ -89,8 +89,8 @@ namespace FixMath.NET
 		{
 			FixVector2 r = Rotate(v, refRotation);
 
-			Fix64 tx = r.x + refPosition.x;
-			Fix64 ty = r.y + refPosition.y;
+			Fix64 tx = r.X + refPosition.X;
+			Fix64 ty = r.Y + refPosition.Y;
 
 			return new FixVector2(tx, ty);
 		}
@@ -109,8 +109,8 @@ namespace FixMath.NET
 
 		public static FixVector2 Rotate(FixVector2 v, Fix64 angle)
 		{
-			Fix64 rx = Fix64.Cos(angle) * v.x - Fix64.Sin(angle) * v.y;
-			Fix64 ry = Fix64.Sin(angle) * v.x + Fix64.Cos(angle) * v.y;
+			Fix64 rx = Fix64.Cos(angle) * v.X - Fix64.Sin(angle) * v.Y;
+			Fix64 ry = Fix64.Sin(angle) * v.X + Fix64.Cos(angle) * v.Y;
 			return new FixVector2(rx, ry);
 		}
 
@@ -136,7 +136,7 @@ namespace FixMath.NET
 
 		public static bool Approximate(FixVector2 a, FixVector2 b)
 		{
-			return Fix64.Approximate(a.x, b.x) && Fix64.Approximate(a.y, b.y);
+			return Fix64.Approximate(a.X, b.X) && Fix64.Approximate(a.Y, b.Y);
 		}
 
 		public static FixVector2 ClampMagnitude(FixVector2 vector, Fix64 magnitude)
@@ -155,74 +155,74 @@ namespace FixMath.NET
 
 
 		public static FixVector2 operator +(FixVector2 a, FixVector2 b) {
-			return new FixVector2(a.x + b.x, a.y + b.y);
+			return new FixVector2(a.X + b.X, a.Y + b.Y);
 		}
 
 		public static FixVector2 operator -(FixVector2 a, FixVector2 b) {
-			return new FixVector2(a.x - b.x, a.y - b.y);
+			return new FixVector2(a.X - b.X, a.Y - b.Y);
 		}
 
 		public static FixVector2 operator -(FixVector2 a) {
-			return new FixVector2(-a.x, -a.y);
+			return new FixVector2(-a.X, -a.Y);
 		}
 
 		public static FixVector2 operator *(FixVector2 a, FixVector2 b) {
-			return new FixVector2(a.x * b.x, a.y * b.y);
+			return new FixVector2(a.X * b.X, a.Y * b.Y);
 		}
 		
 		public static FixVector2 operator *(Fix64 a, FixVector2 b) {
-			return new FixVector2(a * b.x, a * b.y);
+			return new FixVector2(a * b.X, a * b.Y);
 		}
 		
 		public static FixVector2 operator *(FixVector2 a, Fix64 b) {
-			return new FixVector2(a.x * b, a.y * b);
+			return new FixVector2(a.X * b, a.Y * b);
 		}
 
 		public static FixVector2 operator /(FixVector2 a, FixVector2 b) {
-			return new FixVector2(a.x / b.x, a.y / b.y);
+			return new FixVector2(a.X / b.X, a.Y / b.Y);
 		}
 		
 		public static FixVector2 operator /(FixVector2 a, Fix64 b) {
-			return new FixVector2(a.x / b, a.y / b);
+			return new FixVector2(a.X / b, a.Y / b);
 		}
 		
 		public static FixVector2 operator /(Fix64 a, FixVector2 b) {
-			return new FixVector2(a / b.x, a / b.y);
+			return new FixVector2(a / b.X, a / b.Y);
 		}
 
 		public static bool operator ==(FixVector2 a, FixVector2 b)
 		{
-			return a.x == b.x && a.y == b.y;
+			return a.X == b.X && a.Y == b.Y;
 		}
 
 		public static bool operator !=(FixVector2 a, FixVector2 b)
 		{
-			return a.x != b.x || a.y != b.y;
+			return a.X != b.X || a.Y != b.Y;
 		}
 
 		public static bool operator >(FixVector2 a, FixVector2 b)
 		{
-			return a.x > b.x || a.y > b.y;
+			return a.X > b.X || a.Y > b.Y;
 		}
 
 		public static bool operator <(FixVector2 a, FixVector2 b)
 		{
-			return a.x < b.x || a.y < b.y;
+			return a.X < b.X || a.Y < b.Y;
 		}
 
 		public static bool operator >=(FixVector2 a, FixVector2 b)
 		{
-			return a.x >= b.x || a.y >= b.y;
+			return a.X >= b.X || a.Y >= b.Y;
 		}
 
 		public static bool operator <=(FixVector2 a, FixVector2 b)
 		{
-			return a.x <= b.x || a.y <= b.y;
+			return a.X <= b.X || a.Y <= b.Y;
 		}
 
 		public static explicit operator Vector2(FixVector2 value)
 		{
-			return new Vector2((float)value.x, (float)value.y);
+			return new Vector2((float)value.X, (float)value.Y);
 		}
 
 		public static explicit operator FixVector2(Vector2 value) {
@@ -230,7 +230,7 @@ namespace FixMath.NET
 		}
 
 		public static explicit operator Vector3(FixVector2 value) {
-			return new Vector3((float)value.x, (float)value.y, 0);
+			return new Vector3((float)value.X, (float)value.Y, 0);
 		}
 
 		public static explicit operator FixVector2(Vector3 value) {
@@ -239,23 +239,23 @@ namespace FixMath.NET
 
 		public override bool Equals(object obj)
 		{
-			return ((FixVector2)obj).x.RawValue == x.RawValue &&
-				((FixVector2)obj).y.RawValue == y.RawValue;
+			return ((FixVector2)obj).X.RawValue == X.RawValue &&
+				((FixVector2)obj).Y.RawValue == Y.RawValue;
 		}
 
 		public override int GetHashCode()
 		{
-			return x.RawValue.GetHashCode() + y.RawValue.GetHashCode();
+			return X.RawValue.GetHashCode() + Y.RawValue.GetHashCode();
 		}
 
         public override string ToString()
         {
-            return $"({x}, {y})";
+            return $"({X}, {Y})";
         }
 
         public bool Equals(FixVector2 other)
 		{
-			return x == other.x && y == other.y;
+			return X == other.X && Y == other.Y;
 		}
 	}
 }

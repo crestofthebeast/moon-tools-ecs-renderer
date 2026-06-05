@@ -1,4 +1,5 @@
 using Godot;
+using MoonTools.ECS;
 
 namespace GodotMoonTools.Components;
 
@@ -12,3 +13,6 @@ public readonly record struct GDSprite(int ID);
 // text storage style reference to a UID of a texture which we apply to a sprite2D
 // floats theoretically could lead to visual desync but 
 public readonly record struct SpriteTexture(int ID, float XScale, float YScale);
+public readonly record struct Hitbox();
+public readonly record struct Hurtbox();
+public readonly record struct IsAttacking();

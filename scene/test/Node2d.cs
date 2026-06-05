@@ -14,7 +14,10 @@ public partial class Node2d : Node2D
 	World World { get; } = new();
 
 	// systems
+	SnapshotCapture SnapshotCapture;
 	PlayerMovement PlayerMovement;
+	HitDetection HitDetection;
+	SnapshotLoad SnapshotLoad;
 	 
 	// renderer
 	PooledSprite2DRenderer Renderer;
@@ -25,10 +28,14 @@ public partial class Node2d : Node2D
 
 		PlayerMovement = new(World);
 		Renderer = new(World, this);
+		SnapshotCapture = new(World);
+		HitDetection = new(World);
+		SnapshotLoad = new(World);
 
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 2; i++)
 		{
-			SpawnPlayer(0);
+			var p = SpawnPlayer(i);
+			
 		}
 	}
 
@@ -40,7 +47,10 @@ public partial class Node2d : Node2D
 		// we need a span for delta, so lets do that
 		TimeSpan span = DeltaToTimeSpan(delta);
 
+		SnapshotLoad.Update(span);
 		PlayerMovement.Update(span);
+		SnapshotCapture.Update(span);
+		HitDetection.Update(span);
 		Renderer.Update(span);
 
 		World.FinishUpdate();
@@ -66,7 +76,29 @@ public partial class Node2d : Node2D
 			TextureStorage.GetID("player"),
 			1, 1
 		));
+		SpawnAssignHitbox(player);
+		SpawnAssignHurtbox(player);
 		return player;
+	}
+
+	private Entity SpawnAssignHitbox(Entity owner)
+	{
+		var box = World.CreateEntity();
+		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)32, (Fix64)32));
+		World.Set(box, new Hitbox());
+		World.Relate(owner, box, new HasHitbox());
+
+		return box;
+	}
+
+	private Entity SpawnAssignHurtbox(Entity owner)
+	{
+		var box = World.CreateEntity();
+		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)32, (Fix64)32));
+		World.Set(box, new Hurtbox());
+		World.Relate(owner, box, new HasHurtbox());
+
+		return box;
 	}
 
 }

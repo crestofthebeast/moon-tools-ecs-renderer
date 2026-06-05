@@ -10,10 +10,17 @@ public class PlayerMovement : MoonTools.ECS.System
 {
     private Filter PlayerFilter { get; }
     private int moveSpeed = 10;
-    private StringName up = new("p0_up");
-    private StringName down = new("p0_down");
-    private StringName left = new("p0_left");
-    private StringName right = new("p0_right");
+
+    // TODO these suck
+    private StringName up0 = new("p0_up");
+    private StringName down0 = new("p0_down");
+    private StringName left0 = new("p0_left");
+    private StringName right0 = new("p0_right");
+
+    private StringName up1 = new("p1_up");
+    private StringName down1 = new("p1_down");
+    private StringName left1 = new("p1_left");
+    private StringName right1 = new("p1_right");
 
     public PlayerMovement(World world) : base(world)
     {
@@ -29,13 +36,27 @@ public class PlayerMovement : MoonTools.ECS.System
         {
             int id = Get<ControlledByPlayer>(player).PlayerNo;
             var pos = Get<FixPosition>(player).Pos;
-            int moveU = Input.IsActionPressed(up) ? -1 : 0;
-            int moveD = Input.IsActionPressed(down) ? 1 : 0;
-            int moveL = Input.IsActionPressed(left) ? -1 : 0;
-            int moveR = Input.IsActionPressed(right) ? 1 : 0;
+            int moveU = 0;
+            int moveD = 0;
+            int moveL = 0;
+            int moveR = 0;
+            if (id == 0)
+            {
+                moveU = Input.IsActionPressed(up0) ? -1 : 0;
+                moveD = Input.IsActionPressed(down0) ? 1 : 0;
+                moveL = Input.IsActionPressed(left0) ? -1 : 0;
+                moveR = Input.IsActionPressed(right0) ? 1 : 0;
+            }
+            else if (id == 1)
+            {
+                moveU = Input.IsActionPressed(up1) ? -1 : 0;
+                moveD = Input.IsActionPressed(down1) ? 1 : 0;
+                moveL = Input.IsActionPressed(left1) ? -1 : 0;
+                moveR = Input.IsActionPressed(right1) ? 1 : 0;
+            }
 
-            pos.x += new Fix64((moveL + moveR) * moveSpeed);
-            pos.y += new Fix64((moveU + moveD) * moveSpeed);
+            pos.X += new Fix64((moveL + moveR) * moveSpeed);
+            pos.Y += new Fix64((moveU + moveD) * moveSpeed);
 
             Set<FixPosition>(player, new FixPosition(pos));
         }
