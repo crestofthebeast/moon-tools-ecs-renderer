@@ -14,6 +14,7 @@ public partial class Node2d : Node2D
 	World World { get; } = new();
 
 	// systems
+	FStartCleanup FStartCleanup;
 	SnapshotCapture SnapshotCapture;
 	PlayerMovement PlayerMovement;
 	HitDetection HitDetection;
@@ -26,6 +27,7 @@ public partial class Node2d : Node2D
 	{
 		base._Ready();
 
+		FStartCleanup = new(World);
 		PlayerMovement = new(World);
 		Renderer = new(World, this);
 		SnapshotCapture = new(World);
@@ -47,6 +49,7 @@ public partial class Node2d : Node2D
 		// we need a span for delta, so lets do that
 		TimeSpan span = DeltaToTimeSpan(delta);
 
+		FStartCleanup.Update(span);
 		SnapshotLoad.Update(span);
 		PlayerMovement.Update(span);
 		SnapshotCapture.Update(span);
@@ -69,8 +72,8 @@ public partial class Node2d : Node2D
 	{
 		var player = World.CreateEntity();
 		World.Set(player, new ControlledByPlayer(id));
-		int xOffset = (int)GD.RandRange(0, 500);
-		int yOffset = (int)GD.RandRange(0, 500);
+		int xOffset = (int)GD.RandRange(0, 500)*Constants.FixScale;
+		int yOffset = (int)GD.RandRange(0, 500)*Constants.FixScale;
 		World.Set(player, new FixPosition(new FixVector2(new Fix64(xOffset), new Fix64(yOffset))));
 		World.Set(player, new SpriteTexture(
 			TextureStorage.GetID("player"),
@@ -84,7 +87,7 @@ public partial class Node2d : Node2D
 	private Entity SpawnAssignHitbox(Entity owner)
 	{
 		var box = World.CreateEntity();
-		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)32, (Fix64)32));
+		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)(64*Constants.FixScale), (Fix64)(64*Constants.FixScale)));
 		World.Set(box, new Hitbox());
 		World.Relate(owner, box, new HasHitbox());
 
@@ -94,7 +97,7 @@ public partial class Node2d : Node2D
 	private Entity SpawnAssignHurtbox(Entity owner)
 	{
 		var box = World.CreateEntity();
-		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)32, (Fix64)32));
+		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)(64*Constants.FixScale), (Fix64)(64*Constants.FixScale)));
 		World.Set(box, new Hurtbox());
 		World.Relate(owner, box, new HasHurtbox());
 

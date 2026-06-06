@@ -9,7 +9,7 @@ namespace GodotMoonTools.Systems;
 public class PlayerMovement : MoonTools.ECS.System
 {
     private Filter PlayerFilter { get; }
-    private int moveSpeed = 10;
+    private Fix64 moveSpeed = new(10 * Constants.FixScale);
 
     // TODO these suck
     private StringName up0 = new("p0_up");
@@ -55,8 +55,8 @@ public class PlayerMovement : MoonTools.ECS.System
                 moveR = Input.IsActionPressed(right1) ? 1 : 0;
             }
 
-            pos.X += new Fix64((moveL + moveR) * moveSpeed);
-            pos.Y += new Fix64((moveU + moveD) * moveSpeed);
+            pos.X += new Fix64((moveL + moveR) * (int)moveSpeed);
+            pos.Y += new Fix64((moveU + moveD) * (int)moveSpeed);
 
             Set<FixPosition>(player, new FixPosition(pos));
         }

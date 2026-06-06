@@ -47,11 +47,13 @@ public class HitDetection : MoonTools.ECS.System
             if (id == 0 && Input.IsActionJustPressed("p0_check_hit"))
             {
                 Set(player, new IsAttacking());
+                Set(player, new FlashModulate(Color.Color8(255,0,0)));
                 TestHits(0);
             }
             else if (id == 1 && Input.IsActionJustPressed("p1_check_hit"))
             {
                 Set(player, new IsAttacking());
+                Set(player, new FlashModulate(Color.Color8(255,0,0)));
                 TestHits(1);
             }
         }

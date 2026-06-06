@@ -16,3 +16,5 @@ public readonly record struct SpriteTexture(int ID, float XScale, float YScale);
 public readonly record struct Hitbox();
 public readonly record struct Hurtbox();
 public readonly record struct IsAttacking();
+public readonly record struct FlashModulate(Color Color);
+public readonly record struct DrawBoxes();

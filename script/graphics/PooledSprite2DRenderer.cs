@@ -35,12 +35,15 @@ public class PooledSprite2DRenderer : MoonTools.ECS.System
 			Sprites.Add(CreateRenderingSprite());
 		}
 
-		List<(SpriteTexture, FixPosition)> TexturesToRender = new();
+		List<(SpriteTexture, FixPosition, Color)> TexturesToRender = new();
 
 		foreach (var spr in SpriteFilter.Entities)
 		{
+			var modulate = World.Has<FlashModulate>(spr) ? World.Get<FlashModulate>(spr).Color : Color.Color8(255,255,255);
 			TexturesToRender.Add(
-				(World.Get<SpriteTexture>(spr), World.Get<FixPosition>(spr)));
+				(World.Get<SpriteTexture>(spr), 
+				World.Get<FixPosition>(spr),
+				modulate));
 		}
 
 		for (int i = 0; i < PoolSize; i++)
@@ -53,7 +56,8 @@ public class PooledSprite2DRenderer : MoonTools.ECS.System
 				FixPosition pos = TexturesToRender[i].Item2;
 				string spr = TextureStorage.GetString(tex.ID);
 				sprite2D.Texture = ResourceMap.Textures[spr];
-				sprite2D.Position = new Vector2(pos.IntX, pos.IntY);
+				sprite2D.Position = new Vector2(pos.IntX / Constants.FixScale, pos.IntY / Constants.FixScale);
+				sprite2D.SelfModulate = TexturesToRender[i].Item3;
 			}
 			else
 			{
