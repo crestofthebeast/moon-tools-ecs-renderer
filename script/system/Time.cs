@@ -1,6 +1,7 @@
 using System;
 using MoonTools.ECS;
 using GodotMoonTools.Components;
+using Godot;
 
 namespace GodotMoonTools.Systems;
 
@@ -21,9 +22,13 @@ public class Time : MoonTools.ECS.System
         {
             var timer = Get<Timer>(entity);
             var t = timer.Time - (float)delta.TotalSeconds;
+            GD.Print(t);
 
             if (t <= 0.0f)
+            {
+                GD.Print("kill!");
                 Destroy(entity);
+            }
             else
                 Set(entity, timer.Update(t));
         }

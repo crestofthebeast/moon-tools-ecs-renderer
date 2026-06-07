@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FixMath.NET;
 using Godot;
 using GodotMoonTools.Components;
+using GodotMoonTools.Data;
 using MoonTools.ECS;
 
 namespace GodotMoonTools.Systems;
@@ -13,6 +14,8 @@ public class HitDetection : MoonTools.ECS.System
     private Filter AttackingPlayerFilter { get; }
     private Filter HitboxFilter { get; }
     private Filter HurtboxFilter { get; }
+
+    private float winMsgLength = 1;
 
     // TODO these suck
     private StringName check0 = new("p0_check_hit");
@@ -64,7 +67,11 @@ public class HitDetection : MoonTools.ECS.System
             if (HasOutRelation<HasHitEnemy>(player))
             {
                 var id = Get<ControlledByPlayer>(player).PlayerNo;
-                GD.Print($"p{id} got a hit!");
+
+                var timer = CreateEntity();
+                Set(timer, new Timer(winMsgLength));
+                Set(timer, new Message(TextStorage.GetID($"P{id} hit!")));
+
                 var others = OutRelations<HasHitEnemy>(player);
                 foreach (var rel in others)
                 {

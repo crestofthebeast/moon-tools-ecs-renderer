@@ -6,10 +6,14 @@ using GodotMoonTools.Systems;
 using FixMath.NET;
 using GodotMoonTools.Data;
 using Random = MoonTools.ECS.Random;
-public partial class Node2d : Node2D
+using System.Collections.Generic;
+using Time = GodotMoonTools.Systems.Time;
+
+public partial class WorldspaceNode : Node2D
 {
+
 	[Export]
-	CompressedTexture2D playerTexture;
+	Label MessageLabel;
 	// world
 	World World { get; } = new();
 
@@ -18,10 +22,15 @@ public partial class Node2d : Node2D
 	SnapshotCapture SnapshotCapture;
 	PlayerMovement PlayerMovement;
 	HitDetection HitDetection;
+	Messages Messages;
 	SnapshotLoad SnapshotLoad;
+	DebugDraw DebugDraw;
+	Time Time;
 	 
 	// renderer
 	PooledSprite2DRenderer Renderer;
+
+	private List<(Rect2I, Color, bool)> rectsToDraw = new();
 
 	public override void _Ready()
 	{
@@ -32,7 +41,10 @@ public partial class Node2d : Node2D
 		Renderer = new(World, this);
 		SnapshotCapture = new(World);
 		HitDetection = new(World);
+		Messages = new(World, this);
 		SnapshotLoad = new(World);
+		Time = new(World);
+		DebugDraw = new(World, this);
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -54,9 +66,22 @@ public partial class Node2d : Node2D
 		PlayerMovement.Update(span);
 		SnapshotCapture.Update(span);
 		HitDetection.Update(span);
+		Messages.Update(span);
+		Time.Update(span);
 		Renderer.Update(span);
+		DebugDraw.Update(span);
 
 		World.FinishUpdate();
+	}
+
+	public override void _Draw()
+	{
+		foreach (var rect in rectsToDraw)
+		{
+			DrawRect(rect.Item1, rect.Item2, rect.Item3, 2);
+		}
+
+		rectsToDraw.Clear();
 	}
 
 	// sacred gitrogatog incantation. i do not understand this. why is the number so big.
@@ -89,6 +114,7 @@ public partial class Node2d : Node2D
 		var box = World.CreateEntity();
 		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)(64*Constants.FixScale), (Fix64)(64*Constants.FixScale)));
 		World.Set(box, new Hitbox());
+		World.Set(box, new DrawBoxes());
 		World.Relate(owner, box, new HasHitbox());
 
 		return box;
@@ -99,9 +125,19 @@ public partial class Node2d : Node2D
 		var box = World.CreateEntity();
 		World.Set(box, new AABB(Fix64.Zero, Fix64.Zero, (Fix64)(64*Constants.FixScale), (Fix64)(64*Constants.FixScale)));
 		World.Set(box, new Hurtbox());
+		World.Set(box, new DrawBoxes());
 		World.Relate(owner, box, new HasHurtbox());
 
 		return box;
 	}
 
+	public void QueueDrawRect(Rect2I rect, Color color, bool filled)
+	{
+		rectsToDraw.Add((rect, color, filled));
+	}
+
+	internal void SetMessage(string str)
+	{
+		MessageLabel.Text = str;
+	}
 }

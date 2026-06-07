@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://5faddxrsxy4g"]
+
+[node name="HintUI" type="Control" unique_id=1947865650]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="." unique_id=506350120]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 23.0
+offset_right = 280.0
+offset_bottom = 150.0
+theme_override_font_sizes/font_size = 26
+text = "esc to leave
+p1: wasd move, g attack
+p2: arrows move, numpad 4/; attack
+
+5 to save state
+6 to load state"

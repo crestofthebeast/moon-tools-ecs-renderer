@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dytfm04j6ay5l"]
+
+[ext_resource type="Script" uid="uid://blidc5lr7812v" path="res://scene/world/WorldspaceNode.cs" id="1_fo8fd"]
+[ext_resource type="PackedScene" uid="uid://5faddxrsxy4g" path="res://scene/hint_ui.tscn" id="2_38lau"]
+
+[node name="WorldspaceNode" type="Node2D" unique_id=1115583577 node_paths=PackedStringArray("MessageLabel")]
+z_index = 20
+z_as_relative = false
+script = ExtResource("1_fo8fd")
+MessageLabel = NodePath("Label")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=39601710]
+z_index = -4
+z_as_relative = false
+offset_right = 1150.0
+offset_bottom = 645.0
+color = Color(0, 0, 0, 1)
+
+[node name="HintUI" parent="." unique_id=1947865650 instance=ExtResource("2_38lau")]
+
+[node name="Label" type="Label" parent="." unique_id=531137852]
+offset_right = 1151.0
+offset_bottom = 647.0
+theme_override_font_sizes/font_size = 108
+text = "message"
+horizontal_alignment = 1
+vertical_alignment = 1

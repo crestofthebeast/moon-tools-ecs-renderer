@@ -72,6 +72,8 @@ public class PooledSprite2DRenderer : MoonTools.ECS.System
 	{
 		var sprite = new Sprite2D();
 		root.AddChild(sprite);
+		sprite.ZIndex = 10;
+		sprite.ZAsRelative = false;
 		return sprite;
 	}
 }
